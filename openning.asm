@@ -1,3 +1,15 @@
+	;=============================================================
+	;|| Project Name: 4 In a Row								||
+	;|| Author: Shachaf Chen									||
+	;|| E-Mail: shachaf8787@gmail.com							||
+	;|| File Name: openning										||
+	;|| File Description:										||
+	;||		this file take a care for the opening screen of the ||
+	;||		game. this file displays the intro, and the info	||
+	;||		about me and the project.							||
+	;=============================================================
+	
+
 locals @@
 DATASEG
 ; -------------------------------
