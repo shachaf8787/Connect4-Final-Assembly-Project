@@ -37,6 +37,7 @@ DATASEG
 	player_general_message db 'player:$'
 	player_1_turn_message db '  RED$'
 	player_2_turn_message db ' YELLOW$'
+	background db 'Background.bmp', 0
 ;}
 
 ;GAME LOCATIONS {
@@ -83,7 +84,7 @@ start:
 	;start of the main game loop
 	mov cx, 42 ; will run 42 times at most
 main_game_loop:
-	ShowMouse
+	ShowMouse ;showing the mouse on the screen
 	pusha
 MouseLoop:
 ; clears the seventh row of the board

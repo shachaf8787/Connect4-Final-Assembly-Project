@@ -43,7 +43,8 @@ openning_screen	dw 85,165,245,325,405,485,565,645
 author db 'C','r','e','a','t','e','d',' ','B','y',' ','S','h','a','c','h','a','f',' ','C','h','e','n',';',')',' '
 continue_message db 'Press Any Key To Continue$'
 projectpropertiesline1 db 'Teacher: Arik Weinstein | Year: 2021 | ID: 214797813 | School: Oded-Kadima Zoran$'
-projectpropertiesline2 db 'ID: 214797813 | School: Oded-Kadima Zoran$'
+upperlineofthetextbox db  '________________________________________________________________________________$'
+
 ; -------------------------------
 CODESEG
 ; Description: print the openning screen
@@ -58,7 +59,7 @@ proc display_openning_screen
 	mov bl, 80d ;number of x positions possible
 	div bl
 	mov [byte ptr x_cord_screen], ah ;שארית חלוקה 
-	mov [byte ptr y_cord_screen], al;תוצאה
+	mov [byte ptr y_cord_screen], al ;תוצאה
 	utm_SetCursorPosition [x_cord_screen], [y_cord_screen]
 ;display char{
 	mov ah, 9 
@@ -71,7 +72,7 @@ proc display_openning_screen
 	pop cx
 	;}
 	add di, 2 ; set di to next argument in the array
-	utm_Delay 1 ;call dellay of 1/18 sec
+	utm_Delay 0 ;call dellay of 1/18 sec
 	loop @@screen_loop
 	
 ; the program displays the authors name char by char
@@ -100,9 +101,13 @@ proc display_openning_screen
 	utm_SetCursorPosition [x_cord_screen], [y_cord_screen]
 	mov dx, offset continue_message
 	call printString
+	utm_SetCursorPosition 0, 28
+	mov dx, offset upperlineofthetextbox
+	call printString
 	utm_SetCursorPosition 0, 29
 	mov dx, offset projectpropertiesline1
 	call printString
+	
 @@key:
 	;
 	;utm_PrintStrVGA 15, dx, 25, 27
