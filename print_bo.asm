@@ -272,9 +272,9 @@ macro print_bmp_file file
 	call CopyPal
 	call CopyBitmap
 	call CloseFile
-	; Wait for key press
-	mov ah,1
-	int 21h
+	; ; Wait for key press
+	; mov ah,1
+	; int 21h
 endm
 
 

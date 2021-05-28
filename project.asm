@@ -1,7 +1,9 @@
 .486
+jumps
 IDEAL
 MODEL small
 STACK 100h
+
 p186
 jumps
 ;NOWARN BRK
@@ -37,7 +39,8 @@ DATASEG
 	player_general_message db 'player:$'
 	player_1_turn_message db '  RED$'
 	player_2_turn_message db ' YELLOW$'
-	background db 'Background.bmp', 0
+	inst db 'inst.bmp', 0
+	home db 'home.bmp', 0
 ;}
 
 ;GAME LOCATIONS {
@@ -54,6 +57,19 @@ DATASEG
 ;}
 ; --------------------------
 CODESEG
+; ###########################################################
+; # Procedure: get_keyboard_click			     			#
+; # 	   	   Wait for keyboard click and put scan code	#
+; #     	   in ah										#
+; ###########################################################
+proc get_keyboard_click
+waitForClick:											; Loop anchor
+	jz waitForClick										; If there is no click wait for click
+	mov ah, 0											; Read key and clear buffer
+	int 16h
+	ret
+endp get_keyboard_click
+
     include "UtilLib.inc"
     include "GrLib.inc"  
 include 'text.asm'
@@ -62,7 +78,7 @@ include 'rules.asm'
 include 'winCheck.asm'
 include 'print_bo.asm'
 include 'FullPic.asm'
-include 'openning.asm'
+;include 'openning.asm'
 start:
 	mov ax, @data
 	mov ds, ax
@@ -72,10 +88,40 @@ start:
     mov ax, 0
     ut_init_lib ax
 
-	gr_set_video_mode 12h ; 80x30  8x16  640x480
-	call display_openning_screen
-
+	; gr_set_video_mode 12h ; 80x30  8x16  640x480
+	; call display_openning_screen
 	
+	gr_set_video_mode_vga ;320 * 200
+	
+	print_bmp_file home
+	WaitForClicks:
+		call get_keyboard_click
+		
+		cmp al, 27d ;if Esc key was clicked - exit the game
+		je exit
+		
+		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		je start
+		
+		cmp al, 'p' ; if p key was clicked - jump to the game
+		je prepareforgame
+		
+		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		je instructions
+		jmp WaitForClicks
+		
+		
+	instructions:
+		print_bmp_file inst
+		call get_keyboard_click
+		cmp al, 'h'
+		je start
+		cmp al, 'p'
+		je prepareforgame
+		cmp al, 27d
+		je exit
+		jmp instructions
+	prepareforgame:	
 	gr_set_video_mode_vga ;320 * 200
 	push offset game_board
 	call draw_board_graphics
@@ -174,11 +220,40 @@ next:
 player_1_won:
 	HideMouse
 	print_bmp_file player_1_bmp_win_message
-	jmp exit
+	;  Wait for key press
+	call get_keyboard_click
+	cmp al, 27d ;if Esc key was clicked - exit the game
+		je exit
+		
+		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		je start
+		
+		cmp al, 'p' ; if p key was clicked - jump to the game
+		je prepareforgame
+		
+		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		je instructions
+	jmp player_1_won
+	;jmp exit
 ;displays player 2 winning message
 player_2_won:
 	HideMouse
 	print_bmp_file player_2_bmp_win_message
+	;wait for key press
+	call get_keyboard_click
+	cmp al, 27d ;if Esc key was clicked - exit the game
+		je exit
+		
+		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		je start
+		
+		cmp al, 'p' ; if p key was clicked - jump to the game
+		je prepareforgame
+		
+		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		je instructions
+	jmp player_2_won
+
 ; --------------------------
 	
 exit:

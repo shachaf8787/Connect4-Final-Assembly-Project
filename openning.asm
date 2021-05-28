@@ -64,7 +64,7 @@ proc display_openning_screen
 ;display char{
 	mov ah, 9 
 	mov al, 219   ;AL = character to display 
-	mov bl, 4     ;bl = Foreground 
+	mov bl, 10     ;bl = Foreground= glowing green
 	mov bh, 0eh     ; bh = Background
 	push cx
 	mov cx, 1  ;cx = number of times to write character 
@@ -107,24 +107,39 @@ proc display_openning_screen
 	utm_SetCursorPosition 0, 29
 	mov dx, offset projectpropertiesline1
 	call printString
-	
-@@key:
-	;
-	;utm_PrintStrVGA 15, dx, 25, 27
-	; check if there is a character to read
-	mov [chr], 0
-	mov ah, 1h
-	int 16h
-	jz @@noKey
-; waits for character
-	call readChr
-	cmp [chr], 0
-	jne @@exit
-@@noKey:
-	utm_Delay 2 ;call delay of 2/18 sec
-	;utm_PrintStrVGA 0, dx, 25, 27
-	;utm_Delay 9 ;call delay of 2/18 sec	
-	jmp @@key
+	WaitForClicks:
+		call get_keyboard_click
+		
+		cmp al, 27d
+		je exit
+		
+		cmp al, 'h'
+		je start
+		
+		cmp al, 'i'
+		je instructions
+		jmp WaitForClicks
+		
+		
+	instructions:
+		print_bmp_file inst
+; @@key:
+	; ;
+	; ;utm_PrintStrVGA 15, dx, 25, 27
+	; ; check if there is a character to read
+	; mov [chr], 0
+	; mov ah, 1h
+	; int 16h
+	; jz @@noKey
+; ; waits for character
+	; call readChr
+	; cmp [chr], 0
+	; jne @@exit
+; @@noKey:
+	; utm_Delay 2 ;call delay of 2/18 sec
+	; ;utm_PrintStrVGA 0, dx, 25, 27
+	; ;utm_Delay 9 ;call delay of 2/18 sec	
+	; jmp @@key
 	
 	
 @@exit:
