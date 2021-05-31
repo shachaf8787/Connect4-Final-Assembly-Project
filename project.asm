@@ -34,8 +34,8 @@ DATASEG
 	PLAYER_TWO_MESSAGE db 'Player 2 make your selection(0-6)$'
 	PLAYER_ONE_WIN_MESSAGE db 'Congrats player one won$'
 	PLAYER_TWO_WIN_MESSAGE db 'Congrats player two won$'
-	player_1_bmp_win_message db 'pic1.bmp', 0
-	player_2_bmp_win_message db 'pic2.bmp', 0
+	player_1_bmp_win_message db 'p1won.bmp', 0
+	player_2_bmp_win_message db 'p2won.bmp', 0
 	player_general_message db 'player:$'
 	player_1_turn_message db '  RED$'
 	player_2_turn_message db ' YELLOW$'
@@ -78,7 +78,6 @@ include 'rules.asm'
 include 'winCheck.asm'
 include 'print_bo.asm'
 include 'FullPic.asm'
-;include 'openning.asm'
 start:
 	mov ax, @data
 	mov ds, ax
