@@ -6,26 +6,25 @@ STACK 100h
 
 p186
 jumps
-;NOWARN BRK
 DATASEG
 ; --------------------------
 ;CONSTANTS {
-		INCLUDE "Colors.asm" ;(All the constants are in "Colors.asm")
-		BOARD_ROWS EQU 6
-		BOARD_COLUMS EQU 7
-		SQUARE_SIZE EQU 28
-		RADIUS EQU SQUARE_SIZE/2 - 2
+		INCLUDE "Colors.asm" 							    ;(All the constants are in "Colors.asm")	
+		BOARD_ROWS EQU 6 								    ;defining number of rows in the game board
+		BOARD_COLUMS EQU 7 								    ;defining number of colums in the game board
+		SQUARE_SIZE EQU 28 								    ;defining the size of every square of the board
+		RADIUS EQU SQUARE_SIZE/2 - 2 					    ;defining the radius of the disks in the game
 	;}
 
 		
-	game_board db BOARD_ROWS*BOARD_COLUMS dup (0)
+	game_board db BOARD_ROWS*BOARD_COLUMS dup (0) 		    ;defining the board of the game, storing it in an array
 	
-	printNumArr 	DB 0,0,0,0,'$' 
-	Print_Dec		DB 0,0,0,0,0,'$'
-	ARR_DEC			DB 0,0,0,0,0
-	turn db 0
-	chr db 0
-	selection db 0
+	printNumArr 	DB 0,0,0,0,'$' 							;\ 
+	Print_Dec		DB 0,0,0,0,0,'$'						; - assigning arrays variables(preparing for using soon
+	ARR_DEC			DB 0,0,0,0,0							;/
+	turn db 0												;reset the turn variable(presents which player can pull a disk
+	chr db 0												;variable for defining which character to compare the input from the keyboard
+	selection db 0											;
 	pinokio db False
 	player_won dw 0
 	
@@ -59,7 +58,7 @@ DATASEG
 CODESEG
 ; ###########################################################
 ; # Procedure: get_keyboard_click			     			#
-; # 	   	   Wait for keyboard click and put scan code	#
+; # 	   	   Wait for keyboard click and put scan code	#		
 ; #     	   in ah										#
 ; ###########################################################
 proc get_keyboard_click
