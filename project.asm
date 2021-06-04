@@ -151,7 +151,7 @@ main_game_loop:
 	pusha
 MouseLoop:
 															; clears the seventh row of the board
-	utm_Delay 1
+	utm_Delay 2
 	push 60
 	push 0
 	push 200
@@ -192,7 +192,7 @@ no_circle:
 	jne MouseLoop 											; if left click not pressed jump to mouse loop
 	mouse_to_x_cord 										;converts the mouse cords to columns
 	popa
-	utm_Delay 2
+	utm_Delay 1
 															;checks if it is player 1 turn, checks if the place that was pressed is a veiled location, if not valid jumps to the start of the loop if valid continue.
 															;displays who's turn it is, gets the next open row, drops the piece in the location chosen, checks if player 1 won, if he did jumps to display player 1 winning message if not jumps to next.
 ;PLAYER 1 {
@@ -203,7 +203,7 @@ no_circle:
 	jne main_game_loop
 	display_turn player_2_turn_message, YELLOW
 	call get_next_open_row
-	drop_piece row_location, col_location, 1 ; piece 1 or 2
+	drop_piece row_location, col_location, 1				 ; piece 1 or 2
 	winning_move_macro game_board, 1
 	cmp [player_won], 1
 	je player_1_won
@@ -218,7 +218,7 @@ player2:
 	jne main_game_loop
 	display_turn player_1_turn_message, RED
 	call get_next_open_row
-	drop_piece row_location, col_location, 2 ; piece 1 or 2
+	drop_piece row_location, col_location, 2				 ; piece 1 or 2
 	winning_move_macro game_board, 2
 	cmp [player_won], 2
 	je player_2_won
