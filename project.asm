@@ -4,6 +4,19 @@ IDEAL
 MODEL small
 STACK 100h
 
+	;=============================================================
+	;|| Project Name: 4 In a Row								||
+	;|| Author: Shachaf Chen    								||
+	;|| Teacher: Arik Weinstein									||
+	;|| E-Mail: shachaf8787@gmail.com							||
+	;|| File Name: project										||
+	;|| File Description:										||
+	;||		the main file of the project, this file call all the||
+	;||		sub-files, and uses all the vars, procedures, macros||
+	;||		and all the things. this file actually running the	||
+	;||		game, and making the game work properly				||
+	;=============================================================
+
 p186
 jumps
 DATASEG
@@ -20,38 +33,38 @@ DATASEG
 	game_board db BOARD_ROWS*BOARD_COLUMS dup (0) 		    ;defining the board of the game, storing it in an array
 	
 	printNumArr 	DB 0,0,0,0,'$' 							;\ 
-	Print_Dec		DB 0,0,0,0,0,'$'						; - assigning arrays variables(preparing for using soon
+	Print_Dec		DB 0,0,0,0,0,'$'						; - assigning arrays variables(preparing for using soon)
 	ARR_DEC			DB 0,0,0,0,0							;/
 	turn db 0												;reset the turn variable(presents which player can pull a disk
 	chr db 0												;variable for defining which character to compare the input from the keyboard
-	selection db 0											;;;
-	pinokio db False
-	player_won dw 0
+	selection db 0											;reset the selection variable, which means the place to pull a disc
+	pinokio db False										;defining the pinokio variable, this variable responsible for representing true or false
+	player_won dw 0											;this variable represent which player have won the game, its will be 1 if player one is won, etc.
 	
 ;GAME MESSAGES {
-	PLAYER_ONE_MESSAGE db 'Player 1 make your selection(0-6)$'
-	PLAYER_TWO_MESSAGE db 'Player 2 make your selection(0-6)$'
-	PLAYER_ONE_WIN_MESSAGE db 'Congrats player one won$'
-	PLAYER_TWO_WIN_MESSAGE db 'Congrats player two won$'
-	player_1_bmp_win_message db 'p1won.bmp', 0
-	player_2_bmp_win_message db 'p2won.bmp', 0
-	player_general_message db 'player:$'
-	player_1_turn_message db '  RED$'
-	player_2_turn_message db ' YELLOW$'
-	inst db 'inst.bmp', 0
-	home db 'home.bmp', 0
+	PLAYER_ONE_MESSAGE db 'Player 1 make your selection(0-6)$';message that appear in the left of the screen, tell the player which turn is it
+	PLAYER_TWO_MESSAGE db 'Player 2 make your selection(0-6)$';^^^^^^^^^^^^^^^^^^^^^^^^^^^^^the same ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	PLAYER_ONE_WIN_MESSAGE db 'Congrats player one won$'	;message to announce the winning player of the game
+	PLAYER_TWO_WIN_MESSAGE db 'Congrats player two won$'	;^^^^^^^^^^^^^^^^^^the same^^^^^^^^^^^^^^^^^^^^^^^^
+	player_1_bmp_win_message db 'p1won.bmp', 0				; variable that holding the the name of the winning screen for player 1
+	player_2_bmp_win_message db 'p2won.bmp', 0				;^^^^^^^^^^^^^^^^^^^^^^^^^the same^^^^^^^^^^^^^^^^^^^^^^^^ but for player 2
+	player_general_message db 'player:$'					;variable that holding a string which use to write "player" on the left-side screen
+	player_1_turn_message db '  RED$'						;one of the constants that building the sentence: "player RED/YELLOW"
+	player_2_turn_message db ' YELLOW$'						;one of the constants that building the sentence: "player RED/YELLOW"
+	inst db 'inst.bmp', 0									;variable that holding the the name of the bmp file for instructions screen
+	home db 'home.bmp', 0									;variable that holding the the name of the bmp file for home screen
 ;}
 
 ;GAME LOCATIONS {
-	col_location db 0
-	row_location db 0
+	col_location db 0 										;variable for holding the column location, my usecase is in the main game loop, to create an accurate place where to pull a disc
+	row_location db 0										;variable for holding the row location, my usecase is in the main game loop, to create an accurate place where to pull a disc
 
 
 ;}
 ;locals {
-	local1 equ 0
-	local2 equ 0
-	local3 db 0
+	local1 equ 0											;\*
+	local2 equ 0											; \*
+	local3 db 0												; /
 	local4 dw 0
 ;}
 ; --------------------------
@@ -60,6 +73,8 @@ CODESEG
 ; # Procedure: get_keyboard_click			     			#
 ; # 	   	   Wait for keyboard click and put scan code	#		
 ; #     	   in ah										#
+; # 														#
+; # Credit:    Arik Weinstein - from projexam				#
 ; ###########################################################
 proc get_keyboard_click
 waitForClick:											; Loop anchor
