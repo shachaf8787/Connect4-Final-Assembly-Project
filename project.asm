@@ -63,9 +63,9 @@ DATASEG
 ;}
 ;locals {
 	local1 equ 0											;\*
-	local2 equ 0											; \*
-	local3 db 0												; /
-	local4 dw 0
+	local2 equ 0											; \* local variables, using in the subfiles for storing a data locally
+	local3 db 0												; /*
+	local4 dw 0												;/*
 ;}
 ; --------------------------
 CODESEG
@@ -74,52 +74,56 @@ CODESEG
 ; # 	   	   Wait for keyboard click and put scan code	#		
 ; #     	   in ah										#
 ; # 														#
-; # Credit:    Arik Weinstein - from projexam				#
+; # Credit:    Arik Weinstein - from: projexam				#
 ; ###########################################################
 proc get_keyboard_click
-waitForClick:											; Loop anchor
-	jz waitForClick										; If there is no click wait for click
-	mov ah, 0											; Read key and clear buffer
-	int 16h
+waitForClick:												; Loop anchor
+	jz waitForClick											; If there is no click wait for click
+	mov ah, 0												; Read key and clear buffer
+	int 16h	
 	ret
 endp get_keyboard_click
 
-    include "UtilLib.inc"
-    include "GrLib.inc"  
-include 'text.asm'
-include 'aviProc.asm'
-include 'rules.asm'
-include 'winCheck.asm'
-include 'print_bo.asm'
+
+
+    include "UtilLib.inc" 									;\*								
+    include "GrLib.inc"  									; \*
+include 'text.asm'											;  \*
+include 'aviProc.asm'										;   - loading all the sub-files:)
+include 'rules.asm'											;  /*
+include 'winCheck.asm'										; /*
+include 'print_bo.asm'										;/*
 include 'FullPic.asm'
+
+
 start:
 	mov ax, @data
 	mov ds, ax
 ; --------------------------
 
-	    ; Init library with double buffering flag on
+															; Init library with double buffering flag on
     mov ax, 0
     ut_init_lib ax
 
-	; gr_set_video_mode 12h ; 80x30  8x16  640x480
-	; call display_openning_screen
+															; gr_set_video_mode 12h ; 80x30  8x16  640x480
+															; call display_openning_screen
 	
-	gr_set_video_mode_vga ;320 * 200
+	gr_set_video_mode_vga 									;320 * 200
 	
 	print_bmp_file home
 	WaitForClicks:
 		call get_keyboard_click
 		
-		cmp al, 27d ;if Esc key was clicked - exit the game
+		cmp al, 27d 										;if Esc key was clicked - exit the game
 		je exit
 		
-		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		cmp al, 'h'											;if h key was clicked - return to home (this screen)
 		je start
 		
-		cmp al, 'p' ; if p key was clicked - jump to the game
+		cmp al, 'p'											; if p key was clicked - jump to the game
 		je prepareforgame
 		
-		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		cmp al, 'i' 										; if i key was clicked - go to instructions screen 			
 		je instructions
 		jmp WaitForClicks
 		
@@ -135,18 +139,18 @@ start:
 		je exit
 		jmp instructions
 	prepareforgame:	
-	gr_set_video_mode_vga ;320 * 200
+	gr_set_video_mode_vga 									;320 * 200
 	push offset game_board
 	call draw_board_graphics
 	display_turn player_1_turn_message, RED
 	
-	;start of the main game loop
-	mov cx, 42 ; will run 42 times at most
+															;start of the main game loop
+	mov cx, 42 												; will run 42 times at most
 main_game_loop:
-	ShowMouse ;showing the mouse on the screen
+	ShowMouse 												;showing the mouse on the screen
 	pusha
 MouseLoop:
-; clears the seventh row of the board
+															; clears the seventh row of the board
 	utm_Delay 1
 	push 60
 	push 0
@@ -154,25 +158,25 @@ MouseLoop:
 	push 28
 	call GR_ClearRect
 	
-	; check if there is a character to read
+															; check if there is a character to read
 	mov [chr], 0
 	mov ah, 1h
 	int 16h
 	jz noKey
-; waits for character
+															; waits for character
 	call readChr
-; check if user asks to quit
+															; check if user asks to quit
 	cmp [chr], 'q'
 	je exit
 noKey:
 
-;prints a yellow or a red circle on the seventh row on the mouses x cord {
+															;prints a yellow or a red circle on the seventh row on the mouses x cord {
 	GetMouseStatus
 	TranslateMouseCoords
-	cmp cx, 74 ;edge of left side
-	jl no_circle ;if circle is out of range from board
-	cmp cx, 246 ;edge of right side
-	jg no_circle ;if circle is out of range from board
+	cmp cx, 74 												;edge of left side
+	jl no_circle 											;if circle is out of range from board
+	cmp cx, 246 											;edge of right side
+	jg no_circle											;if circle is out of range from board
 	cmp [turn], 0
 	jne yellow_circle
 	gr_set_color RED
@@ -184,13 +188,13 @@ red_circle:
 no_circle:
 ;}
 	GetMouseStatus
-	cmp bx, 01h ; check left mouse click
-	jne MouseLoop ; if left click not pressed jump to mouse loop
-	mouse_to_x_cord ;converts the mouse cords to columns
+	cmp bx, 01h 											; check left mouse click
+	jne MouseLoop 											; if left click not pressed jump to mouse loop
+	mouse_to_x_cord 										;converts the mouse cords to columns
 	popa
 	utm_Delay 2
-;checks if it is player 1 turn, checks if the place that was pressed is a veiled location, if not valid jumps to the start of the loop if valid continue.
-;displays who's turn it is, gets the next open row, drops the piece in the location chosen, checks if player 1 won, if he did jumps to display player 1 winning message if not jumps to next.
+															;checks if it is player 1 turn, checks if the place that was pressed is a veiled location, if not valid jumps to the start of the loop if valid continue.
+															;displays who's turn it is, gets the next open row, drops the piece in the location chosen, checks if player 1 won, if he did jumps to display player 1 winning message if not jumps to next.
 ;PLAYER 1 {
 	cmp [turn], 0
 	jne player2
@@ -205,8 +209,8 @@ no_circle:
 	je player_1_won
 	jmp next
 ;}
-;checks if the place that was pressed is a veiled location, if not valid jumps to the start of the loop if valid continue.
-;displays who's turn it is, gets the next open row, drops the piece in the location chosen, checks if player 2 won, if he did jumps to display player 1 winning message if not jumps to next.
+															;checks if the place that was pressed is a veiled location, if not valid jumps to the start of the loop if valid continue.
+															;displays who's turn it is, gets the next open row, drops the piece in the location chosen, checks if player 2 won, if he did jumps to display player 1 winning message if not jumps to next.
 ;PLAYER 2 {
 player2:
 	call is_valid_location
@@ -219,7 +223,7 @@ player2:
 	cmp [player_won], 2
 	je player_2_won
 ;}
-;hides the mouse, draws the board, show to mouse back again, changes the turn, loops main game loop.
+															;hides the mouse, draws the board, show to mouse back again, changes the turn, loops main game loop.
 next:
 	HideMouse
 	push offset game_board
@@ -229,41 +233,40 @@ next:
 	loop main_game_loop
 	jmp exit
 	
-;displays player 1 winning message
+															;displays player 1 winning message
 player_1_won:
 	HideMouse
 	print_bmp_file player_1_bmp_win_message
-	;  Wait for key press
+															;  Wait for key press
 	call get_keyboard_click
-	cmp al, 27d ;if Esc key was clicked - exit the game
+	cmp al, 27d 											;if Esc key was clicked - exit the game
 		je exit
 		
-		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		cmp al, 'h' 										;if h key was clicked - return to home (this screen)
 		je start
 		
-		cmp al, 'p' ; if p key was clicked - jump to the game
+		cmp al, 'p' 										; if p key was clicked - jump to the game
 		je prepareforgame
 		
-		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		cmp al, 'i' 										; if i key was clicked - go to instructions screen 			
 		je instructions
 	jmp player_1_won
-	;jmp exit
-;displays player 2 winning message
+															;displays player 2 winning message
 player_2_won:
 	HideMouse
 	print_bmp_file player_2_bmp_win_message
-	;wait for key press
+															;wait for key press
 	call get_keyboard_click
-	cmp al, 27d ;if Esc key was clicked - exit the game
+	cmp al, 27d 											;if Esc key was clicked - exit the game
 		je exit
 		
-		cmp al, 'h' ;if h key was clicked - return to home (this screen)
+		cmp al, 'h' 										;if h key was clicked - return to home (this screen)
 		je start
 		
-		cmp al, 'p' ; if p key was clicked - jump to the game
+		cmp al, 'p' 										; if p key was clicked - jump to the game
 		je prepareforgame
 		
-		cmp al, 'i' ; if i key was clicked - go to instructions screen 			
+		cmp al, 'i' 										; if i key was clicked - go to instructions screen 			
 		je instructions
 	jmp player_2_won
 
