@@ -24,7 +24,7 @@ DATASEG
 	ARR_DEC			DB 0,0,0,0,0							;/
 	turn db 0												;reset the turn variable(presents which player can pull a disk
 	chr db 0												;variable for defining which character to compare the input from the keyboard
-	selection db 0											;
+	selection db 0											;;;
 	pinokio db False
 	player_won dw 0
 	
