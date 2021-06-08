@@ -10,7 +10,7 @@
 	;=============================================================
 
 	;Colors ;{
-		black 			EQU 0000b
+		black 			EQU 0000b			;define all colors codes.
 		
 		blue 			EQU 0001b
 		green 			EQU 0010b
@@ -46,8 +46,8 @@
 	
 	
 	;Scan Codes {
-		ARR_U 			EQU 48h
-		ARR_D 			EQU 50h
+		ARR_U 			EQU 48h 			;define keyboard clicks. translate from computer language
+		ARR_D 			EQU 50h				;to human language
 		ARR_L 			EQU 4Bh
 		ARR_R 			EQU 4Dh
 		
@@ -59,18 +59,18 @@
 	;}
 	
 	; MAIN_MENU {
-		BTN_PLAY EQU 0
+		BTN_PLAY EQU 0						;define bottons for play, help and exit
 		BTN_HELP EQU 1
 		BTN_EXIT EQU 2
 	;}
 	
 	; Boolean Values {
-		TRUE 	EQU 1
+		TRUE 	EQU 1						;bools - true=1, false=0
 		FALSE 	EQU 0
 	;}
 	
 	;FILES {
-		READ  		EQU 0
+		READ  		EQU 0					;define file handling methodes
 		WRITE 		EQU 1
 		READ&WRITE 	EQU 2
 		
@@ -80,6 +80,6 @@
 	;}
 	
 	;CLOCK {
-		CLOCK_ADDRESS EQU WORD PTR ES:6Ch		
+		CLOCK_ADDRESS EQU WORD PTR ES:6Ch	;define the clock, using for count seconds.		
 	;}
 	

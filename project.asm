@@ -138,7 +138,8 @@ start:
 		cmp al, 27d
 		je exit
 		jmp instructions
-	prepareforgame:	
+	prepareforgame:
+	
 	gr_set_video_mode_vga 									;320 * 200
 	push offset game_board
 	call draw_board_graphics
@@ -218,7 +219,7 @@ player2:
 	jne main_game_loop
 	display_turn player_1_turn_message, RED
 	call get_next_open_row
-	drop_piece row_location, col_location, 2				 ; piece 1 or 2
+	drop_piece row_location, col_location, 2				; piece 1 or 2
 	winning_move_macro game_board, 2
 	cmp [player_won], 2
 	je player_2_won
@@ -241,15 +242,7 @@ player_1_won:
 	call get_keyboard_click
 	cmp al, 27d 											;if Esc key was clicked - exit the game
 		je exit
-		
-		cmp al, 'h' 										;if h key was clicked - return to home (this screen)
-		je start
-		
-		cmp al, 'p' 										; if p key was clicked - jump to the game
-		je prepareforgame
-		
-		cmp al, 'i' 										; if i key was clicked - go to instructions screen 			
-		je instructions
+
 	jmp player_1_won
 															;displays player 2 winning message
 player_2_won:
@@ -259,15 +252,7 @@ player_2_won:
 	call get_keyboard_click
 	cmp al, 27d 											;if Esc key was clicked - exit the game
 		je exit
-		
-		cmp al, 'h' 										;if h key was clicked - return to home (this screen)
-		je start
-		
-		cmp al, 'p' 										; if p key was clicked - jump to the game
-		je prepareforgame
-		
-		cmp al, 'i' 										; if i key was clicked - go to instructions screen 			
-		je instructions
+
 	jmp player_2_won
 
 ; --------------------------

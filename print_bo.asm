@@ -202,18 +202,18 @@ proc draw_board_graphics
 	;REGS:
 	pusha
 ;}
-	; Set initial pen color
+											; Set initial pen color
     gr_set_color BLUE
 	GRm_FillRect 60, 28, 200, 172
 	
 		mov bx, offset_board
-		mov dx, 186  ; y cord first position
-		MOV ch, 0    ; set Ch=0 checks rows
-	@@OUTER_LOOP:                   ; loop label
-		MOV cl, 0  ; set Cl=0 checks colums
+		mov dx, 186  						; y cord first position
+		MOV ch, 0    						; set Ch=0 checks rows
+	@@OUTER_LOOP:            		      	;loop label
+		MOV cl, 0  							; set Cl=0 checks colums
 		
-		mov [local4], 74  ; x cord first position
-	@@INNER_LOOP:                 ; loop label
+		mov [local4], 74  					; x cord first position
+	@@INNER_LOOP:               		  	; loop label
 		row equ ch
 		mov [local3], cl
 		
@@ -230,7 +230,7 @@ proc draw_board_graphics
 	@@red:
 	gr_set_color RED
 	@@continue:
-	;draw circle on board{
+											;draw circle on board{
 		pusha
 		push [local4]
 		push dx
@@ -239,17 +239,17 @@ proc draw_board_graphics
 		popa
 	;}
 		add [local4], SQUARE_SIZE
-		inc cl	; set CH=CH+1
+		inc cl								; set CH=CH+1
 		cmp cl, BOARD_COLUMS
-		JL @@INNER_LOOP              ; jump to label @INNER_LOOP if CL<7
+		JL @@INNER_LOOP              		; jump to label @INNER_LOOP if CL<7
 
 		sub dx, SQUARE_SIZE
-		inc ch	; set CH=CH+1
+		inc ch								; set CH=CH+1
 		cmp ch, BOARD_ROWS
-		JL @@OUTER_LOOP            ; jump to label @OUTER_LOOP if CX<6
+		JL @@OUTER_LOOP            			; jump to label @OUTER_LOOP if CX<6
 	;}
 	popa
-	add sp, 4 ; De-allocate local variables
+	add sp, 4 								; De-allocate local variables
 	pop bp
 	ret 2
 endp draw_board_graphics
@@ -265,16 +265,13 @@ macro print_bmp_file file
 	push offset file
 	call Strcpy
 	;}
-	; Process BMP file
+											; Process BMP file
 	call OpenFile
 	call ReadHeader
 	call ReadPalette
 	call CopyPal
 	call CopyBitmap
 	call CloseFile
-	; ; Wait for key press
-	; mov ah,1
-	; int 21h
 endm
 
 

@@ -10,12 +10,12 @@
 	;||		the cursor to the row and coloum, color to string 	||
 	;===================================================
 
-	;Description: Takes a number and prints it in hex
+													;Description: Takes a number and prints it in hex
 
-	PROC TEXT_PRINT_NUM
-	;Input:	 	Num
-	;Output: 	prints Num on the screen
-	;Variables:	ArrayEnd
+		PROC TEXT_PRINT_NUM
+													;Input:	 	Num
+													;Output: 	prints Num on the screen
+													;Variables:	ArrayEnd
 	
 	;{
 		;params {
@@ -32,12 +32,12 @@
 			ArrayEnd equ [ss:bp - 2]
 		;}
 		
-		;Push REGS
+													;Push REGS
 		;{
 			pusha
 		;}
 		
-		;CODE
+													;CODE
 		;{
 			mov  bx, OFFSET printNumArr
 			mov  cx, 10h
@@ -69,7 +69,7 @@
 				jmp exitToAscii
 				
 				toLetter:
-				add [byte ptr ds:bx], 37h	; 37h = 'A' - 0Ah 
+				add [byte ptr ds:bx], 37h			; 37h = 'A' - 0Ah 
 				
 				exitToAscii:
 				dec bx
@@ -84,7 +84,7 @@
 			
 		;}
 		
-		;Pop REGS
+													;Pop REGS
 		;{
 			popa
 		;}
@@ -165,8 +165,8 @@
 ;*****************************************************************************
 	
 	PROC TEXT_SET_CURPOS
-	;Input: CUR_COL, CUR_ROW
-	;Output: Sets cursor position to the ROW & COL
+													;Input: CUR_COL, CUR_ROW
+													;Output: Sets cursor position to the ROW & COL
 	
 	;{
 	
@@ -186,11 +186,11 @@
 			PUSH DX
 		;}
 		
-		;INT 10, AH = 2 {
-		;	SET CURSOR POSITION
-		;	BL = PAGE NUMBER (0)
-		;	DL = COL (X)
-		;	DH = ROW (Y)
+													;INT 10, AH = 2 {
+													;	SET CURSOR POSITION
+													;	BL = PAGE NUMBER (0)
+													;	DL = COL (X)
+													;	DH = ROW (Y)
 		;}
 		
 		;USE PARAMS & CALL INTERUPT {
@@ -231,8 +231,8 @@
 	
 	PROC TEXT_PRINTDEC
 	;{
-		;Input: Decimal array offset (array you want to print)
-		;PRINTS A DECIMAL NUMBER.
+													;Input: Decimal array offset (array you want to print)
+													;PRINTS A DECIMAL NUMBER.
 		
 		;START PROC {
 			PUSH BP
@@ -248,7 +248,7 @@
 		
 		;CODE {
 			MOV SI, ARR_OFF
-			MOV DI, OFFSET PRINT_DEC; print_dec db 0,0,0,0,0,'$'
+			MOV DI, OFFSET PRINT_DEC				; print_dec db 0,0,0,0,0,'$'
 			XOR BX, BX
 			
 			@@COPY_ARR: ;{
@@ -306,8 +306,8 @@
 	
 	PROC TEXT_COLORSTR
 	;{
-		;PRINTS A STRING WITH COLOR.
-		;INPUT: COLOR, STRING OFFSET.
+													;PRINTS A STRING WITH COLOR.
+													;INPUT: COLOR, STRING OFFSET.
 		
 		;START PROC {
 			PUSH BP
